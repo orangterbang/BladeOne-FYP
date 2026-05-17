@@ -1,0 +1,10 @@
+11/5/26 - 17/6/26
+1. Basic Movement
+- try using the new input system
+
+2. Camera Controller
+- can be similar to fyp 1 prototype
+
+3. Basic Input Action (If have time)
+- Have Parry, Attack & Dodge Mechanic that is based on direction
+- Don't have to test it because it depends on animation or can be just a cube

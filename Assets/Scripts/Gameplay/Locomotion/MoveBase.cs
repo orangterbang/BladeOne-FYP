@@ -1,15 +1,17 @@
 using UnityEngine;
 
-public class MoveBase : MonoBehaviour
+[RequireComponent(typeof(Movement))]
+public abstract class MoveBase : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    protected Movement movement;
+    protected MoveDirection moveDirection;
+
+    protected virtual void Start()
     {
-        
+        movement = GetComponent<Movement>();    
     }
 
-    // Update is called once per frame
-    void Update()
+    protected virtual void Update()
     {
         
     }

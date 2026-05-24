@@ -1,24 +1,34 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class MovementPoint : MonoBehaviour
 {
-    public GameObject actor;
-    private List<Point> points;
+    //public GameObject actor;
+    [SerializeField]private List<Point> points;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+        SetPoints();
     }
 
     void SetPoints()
     {
-        
+        for(int i = 0; i < transform.childCount; i++)
+        {
+            Transform child = transform.GetChild(i);
+            points.Add(child.GetComponent<Point>());
+        }
     }
 
-    public void CheckPoint()
+    public bool CheckPoint(MoveDirection moveDirection)
     {
-        
+        return points.Any(p => p.pointDirection == moveDirection);
+    }
+
+    public Point GetPoint(MoveDirection moveDirection)
+    {
+         return points.SingleOrDefault(p => p.pointDirection == moveDirection);
     }
 }

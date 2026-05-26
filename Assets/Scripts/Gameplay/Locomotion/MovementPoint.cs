@@ -22,13 +22,14 @@ public class MovementPoint : MonoBehaviour
         }
     }
 
-    public bool CheckPoint(MoveDirection moveDirection)
+    public bool CheckPoint(Direction moveDirection)
     {
         return points.Any(p => p.pointDirection == moveDirection);
     }
 
-    public Point GetPoint(MoveDirection moveDirection)
+    public Point GetPoint(Direction moveDirection)
     {
+        Debug.Log("In " + name + " at GetPoint, with direction of " + moveDirection);
          return points.SingleOrDefault(p => p.pointDirection == moveDirection);
     }
 }

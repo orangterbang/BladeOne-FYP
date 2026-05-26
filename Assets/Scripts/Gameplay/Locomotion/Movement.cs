@@ -12,14 +12,16 @@ public class Movement : MonoBehaviour
         animator = GetComponent<Animator>();
     }
 
-    public void Move(MoveDirection moveDirection)
+    public void Move(Direction moveDirection)
     {
+        Debug.Log("In " + name);
         if(!movementPoint.CheckPoint(moveDirection)) return;
+        Debug.Log("In " + name + " After CheckPoint");
 
         StartCoroutine(MoveCoroutine(moveDirection));
     }
 
-    private IEnumerator MoveCoroutine(MoveDirection moveDirection)
+    private IEnumerator MoveCoroutine(Direction moveDirection)
     {
         // Start jump animation
         animator.SetBool("isJumping", true);

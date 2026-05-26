@@ -1,10 +1,12 @@
+using System;
 using UnityEngine;
 
 [RequireComponent(typeof(Movement))]
 public abstract class MoveBase : MonoBehaviour
 {
+    public event Action<ActionInput, Direction> OnMoveAction;
     protected Movement movement;
-    protected MoveDirection moveDirection;
+    protected Direction moveDirection;
 
     protected virtual void Start()
     {
@@ -14,5 +16,11 @@ public abstract class MoveBase : MonoBehaviour
     protected virtual void Update()
     {
         
+    }
+
+    protected void RaiseMoveAction(ActionInput action, Direction direction)
+    {
+        OnMoveAction?.Invoke(ActionInput.Move, direction);
+        Debug.Log("Move Action Raised with direction " + direction);
     }
 }

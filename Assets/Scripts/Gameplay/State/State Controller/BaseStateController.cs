@@ -5,12 +5,13 @@ public abstract class StateController : MonoBehaviour
 {
     protected MoveBase move;
     protected ActionBase action;
-    protected StateMachine charStateMachine;
+    protected ActorContext actor;
 
     protected virtual void Awake()
     {
         move = GetComponent<MoveBase>();
         action = GetComponent<ActionBase>();
+        actor = GetComponent<ActorContext>();
     }
 
     protected virtual void Start(){}

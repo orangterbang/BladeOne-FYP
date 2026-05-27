@@ -44,12 +44,6 @@ public abstract class StateMachine
     protected virtual void OnUpdate(){}
     protected virtual void OnExit(){}
 
-    public virtual void SetDirection(Direction dir)
-    {
-        direction = dir;
-        Debug.Log("In StateMachine with direction " + direction + "taken from dir " + dir);
-    }
-
     public void LoadSubState(StateMachine subState)
     {
         if(subStates.Count == 0)
@@ -95,6 +89,11 @@ public abstract class StateMachine
 
             root = root.currentSubState;
         }
+    }
+
+    public void SetDirection(Direction dir)
+    {
+        direction = dir;
     }
 
     private void ChangeSubState(StateMachine state)

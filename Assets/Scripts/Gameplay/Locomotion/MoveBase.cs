@@ -21,6 +21,5 @@ public abstract class MoveBase : MonoBehaviour
     protected void RaiseMoveAction(ActionInput action, Direction direction)
     {
         OnMoveAction?.Invoke(ActionInput.Move, direction);
-        Debug.Log("Move Action Raised with direction " + direction);
     }
 }

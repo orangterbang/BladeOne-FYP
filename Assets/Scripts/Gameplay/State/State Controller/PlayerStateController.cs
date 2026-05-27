@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class PlayerStateController : StateController
 {
+    ActorContext player;
     MoveState moveState;
         StanceState stanceState;
         DodgeState dodgeState;
@@ -10,11 +11,11 @@ public class PlayerStateController : StateController
     protected override void Start()
     {   
         base.Start();
-        Movement movement = GetComponent<Movement>();
+        player = actor;
 
         moveState = new MoveState();
         stanceState = new StanceState();
-        dodgeState = new DodgeState(movement);
+        dodgeState = new DodgeState(player);
 
         
         moveState.LoadSubState(stanceState);
@@ -60,6 +61,5 @@ public class PlayerStateController : StateController
                 moveState.SendTrigger(action);
                 break;
         }
-        Debug.Log("MoveState event Enabled with direction " + direction);
     }
 }

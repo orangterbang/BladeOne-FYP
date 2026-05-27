@@ -34,7 +34,6 @@ public class MovementInput : MoveBase
 
         if(Input.GetKeyDown(KeyCode.LeftShift) && isPressing)
         {
-            //movement.Move(moveDirection);
             RaiseMoveAction(ActionInput.Move, moveDirection);
         }
     }

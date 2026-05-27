@@ -1,18 +1,19 @@
 using UnityEngine;
+using System.Collections;
 
 public class DodgeState : StateMachine
 {
-    Movement movement;
+    ActorContext actor;
 
-    public DodgeState(Movement movement)
+    public DodgeState(ActorContext actor)
     {
-        this.movement = movement;
+        this.actor = actor;
     }
     protected override void OnEnter()
-    {Debug.Log("In Dodge State with direction " + direction);
-        if(movement != null)
+    {
+        if(actor != null)
         {
-            movement.Move(direction);
+            actor.coroutineRun.Run(MoveCoroutine());
         }
     }
     protected override void OnUpdate()
@@ -20,4 +21,16 @@ public class DodgeState : StateMachine
         
     }
     protected override void OnExit(){}
+
+    private IEnumerator MoveCoroutine()
+    {
+        actor.animator.SetActionAnimation(ActionInput.Move);
+        actor.animator.EnableAction();
+        actor.animator.PlayAnim();
+
+        yield return new WaitForSeconds(actor.movement.GetJumpDuration());
+
+        actor.movement.Move(direction);
+        actor.animator.DisableAction();
+    }
 }

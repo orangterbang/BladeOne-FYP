@@ -5,3 +5,17 @@ public enum ActionInput{
     Block,
     Stance
 }
+
+public enum ActionEvent
+{
+    OnHealthZero,
+    OnRespawn,
+    AttackPressed,
+    ParryPressed,
+    DodgePressed,
+    CombatSequenceComplete,
+    OnHitReceived,
+    OnStunned,
+    HitStunRecovered,
+    ChangeSubState
+}

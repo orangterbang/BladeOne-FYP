@@ -4,7 +4,7 @@ using UnityEngine;
 [RequireComponent(typeof(Movement))]
 public abstract class MoveBase : MonoBehaviour
 {
-    public event Action<ActionInput, Direction> OnMoveAction;
+    public event Action<ActionEvent, Direction> OnMoveAction;
     protected Movement movement;
     protected Direction moveDirection;
 
@@ -18,8 +18,8 @@ public abstract class MoveBase : MonoBehaviour
         
     }
 
-    protected void RaiseMoveAction(ActionInput action, Direction direction)
+    protected void RaiseMoveAction(ActionEvent action, Direction direction)
     {
-        OnMoveAction?.Invoke(ActionInput.Move, direction);
+        OnMoveAction?.Invoke(action, direction);
     }
 }

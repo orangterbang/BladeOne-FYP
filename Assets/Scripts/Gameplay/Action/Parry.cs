@@ -2,15 +2,19 @@ using UnityEngine;
 
 public class Parry : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    [SerializeField] private MovementPoint movementPoint;//holds the movement point of itself
+    [SerializeField] private float parryDuration = 0.25f;
+    private CombatReceiver combatReceiver;
+
     void Start()
     {
-        
+        combatReceiver = GetComponent<CombatReceiver>();
     }
 
-    // Update is called once per frame
-    void Update()
+    public void ExecuteParry(Direction direction)
     {
-        
+        combatReceiver.ParryPerformed(direction);
     }
+
+    public float GetParryDuration() => parryDuration;
 }

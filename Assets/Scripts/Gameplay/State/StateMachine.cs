@@ -9,11 +9,11 @@ using UnityEngine;
 public abstract class StateMachine
 {
     private StateMachine currentSubState;
-    private StateMachine defaultSubState;
+    protected StateMachine defaultSubState;
     private StateMachine parent;
 
     private Dictionary<Type, StateMachine> subStates = new Dictionary<Type, StateMachine>();
-    private Dictionary<ActionInput, StateMachine> transitions = new Dictionary<ActionInput, StateMachine>();
+    private Dictionary<ActionEvent, StateMachine> transitions = new Dictionary<ActionEvent, StateMachine>();
 
     protected Direction direction;
 
@@ -38,6 +38,8 @@ public abstract class StateMachine
     {
         currentSubState?.ExitStateMachine();
         OnExit();
+
+        currentSubState = null;
     }
 
     protected virtual void OnEnter(){}
@@ -56,7 +58,7 @@ public abstract class StateMachine
         subStates.Add(subState.GetType(), subState);
     }
 
-    public void AddTransition(StateMachine from, StateMachine to, ActionInput trigger)
+    public void AddTransition(StateMachine from, StateMachine to, ActionEvent trigger)
     {
         if(!subStates.TryGetValue(from.GetType(), out _))
         {
@@ -71,7 +73,7 @@ public abstract class StateMachine
         from.transitions.Add(trigger, to);
     }
 
-    public void SendTrigger(ActionInput trigger)
+    public void SendTrigger(ActionEvent trigger)
     {
         var root = this;
         while(root?.parent != null)
@@ -94,9 +96,12 @@ public abstract class StateMachine
     public void SetDirection(Direction dir)
     {
         direction = dir;
+
+        defaultSubState?.SetDirection(direction);
+        currentSubState?.SetDirection(direction);
     }
 
-    private void ChangeSubState(StateMachine state)
+    /*private void ChangeSubState(StateMachine state) <---Unused method
     {
         currentSubState?.ExitStateMachine();
         //var newState = subStates[GetType()];
@@ -107,5 +112,20 @@ public abstract class StateMachine
         }
         currentSubState = newState;
         newState.EnterStateMachine();
-    }
+    }*/
+
+    private void ChangeSubState(StateMachine newState)
+    {
+        // Ensure this parent actually owns this substate type
+        if (!subStates.ContainsKey(newState.GetType()))
+        {
+            Debug.LogError($"State {newState.GetType()} is not a registered substate of {this.GetType()}");
+            return;
+        }
+
+        currentSubState?.ExitStateMachine();
+        currentSubState = subStates[newState.GetType()]; // Use the parent's registered instance
+        currentSubState.SetDirection(this.direction);
+        currentSubState.EnterStateMachine();
+        }
 }

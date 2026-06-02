@@ -5,12 +5,6 @@ public class Movement : MonoBehaviour
 {
     [SerializeField]private MovementPoint movementPoint;
     [SerializeField] private float jumpDuration = 0.1f;
-    public Animator animator;
-
-    void Start()
-    {
-        animator = GetComponent<Animator>();
-    }
 
     public void Move(Direction moveDirection)
     {

@@ -3,17 +3,21 @@ using UnityEngine;
 
 public class ActionBase : MonoBehaviour
 {
-    //public event Action<ActionInput> OnActionInput;
+    public event Action<ActionEvent, Direction> OnActionInput;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    protected Direction actionDirection;
+
     protected virtual void Start()
     {
         
     }
-
-    // Update is called once per frame
     protected virtual void Update()
     {
         
+    }
+
+    protected void RaiseMoveAction(ActionEvent action, Direction direction)
+    {
+        OnActionInput?.Invoke(action, direction);
     }
 }

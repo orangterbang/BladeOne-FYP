@@ -7,6 +7,7 @@ public class ActorContext : MonoBehaviour
     public Parry parry { get; private set; }
     public AnimatorController animator { get; private set; }
     public CoroutineRunner coroutineRun { get; private set; }
+    public ActorCombatData actorCombatData { get; private set; }
     
     protected virtual void Awake()
     {
@@ -15,5 +16,6 @@ public class ActorContext : MonoBehaviour
         attack = GetComponent<Attack>();
         parry = GetComponent<Parry>();
         coroutineRun = GetComponent<CoroutineRunner>();
+        actorCombatData = GetComponent<ActorCombatData>();
     }
 }

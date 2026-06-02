@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 4390462332297949581}
   - component: {fileID: 1221126097354711809}
   - component: {fileID: 8546184736087323835}
+  - component: {fileID: 838324202199443577}
   m_Layer: 0
   m_Name: Move Point
   m_TagString: Untagged
@@ -103,7 +104,7 @@ SphereCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -122,3 +123,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pointDirection: 0
+--- !u!114 &838324202199443577
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3604166863070270011}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2c0d6ace0cb97484399debbd0e31fee6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

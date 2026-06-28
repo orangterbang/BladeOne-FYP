@@ -8,14 +8,17 @@ public class HitStunState : StateMachine
         this.actor=actorContext;
 
         StaggerState staggerState = new StaggerState(actor);
+        CriticalStaggerState criticalStaggerState = new CriticalStaggerState(actor);
         StunnedState stunnedState = new StunnedState(actor);
         WakeUpState wakeUpState = new WakeUpState(actor);
 
         LoadSubState(staggerState);
+        LoadSubState(criticalStaggerState);
         LoadSubState(stunnedState);
         LoadSubState(wakeUpState);
 
-        AddTransition(staggerState, stunnedState, ActionEvent.ChangeSubState);
+        AddTransition(staggerState, stunnedState, ActionEvent.OnStunned);
         AddTransition(stunnedState, wakeUpState, ActionEvent.ChangeSubState);
+        AddTransition(stunnedState, criticalStaggerState, ActionEvent.OnCritHitReceived);
     }
 }

@@ -11,6 +11,7 @@ public abstract class MoveBase : MonoBehaviour
     protected virtual void Start()
     {
         movement = GetComponent<Movement>();    
+        //movement.Move(Direction.Up);
     }
 
     protected virtual void Update()

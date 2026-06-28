@@ -34,7 +34,8 @@ public class MovementPoint : MonoBehaviour
 
     public Point TryGetPointWithTarget()
     {
-        return points.SingleOrDefault(p => p.collideWithObject.isTargetInCurrentPoint() == true);
+        var matches = points.Where(p => p.collideWithObject != null && p.collideWithObject.isTargetInCurrentPoint()).ToList();
+        return matches.FirstOrDefault();
     }
 
     public bool ComparePoints(Point targetPoint, Point receivedPoint)

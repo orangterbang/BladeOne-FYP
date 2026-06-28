@@ -15,6 +15,7 @@ public class ParryWindUpState : StateMachine
         actor.animator.SetActionAnimation(ActionInput.Parry, direction);
         
         actor.animator.PlayAnim();
+        actor.actorCombatData.ActorHasFinishedParrying();
 
         SendTrigger(ActionEvent.ChangeSubState);
     }

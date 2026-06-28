@@ -2,15 +2,18 @@ using UnityEngine;
 
 public class DeadState : StateMachine
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    ActorContext actor;
+
+    public DeadState(ActorContext actor)
     {
-        
+        this.actor = actor;
     }
 
-    // Update is called once per frame
-    void Update()
+    protected override void OnEnter()
     {
-        
+        Debug.Log("Died");
+        actor.actorCombatData.ActorHasDied();
+        actor.animator.SetActionAnimation(ActionEvent.OnHealthZero);
+        actor.animator.PlayAnim(AnimatorController.REACTION_LAYER);
     }
 }

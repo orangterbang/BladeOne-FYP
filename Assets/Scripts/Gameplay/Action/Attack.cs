@@ -26,17 +26,12 @@ public class Attack : MonoBehaviour
         //this receive hit will check if the target is doing parry/dodge and the hit is within the timer for these action
         //if yes then something happen to this character
         //if not then target receive the hit and gets damage
-        var attackActionPoint = movementPoint.GetPoint(Direction.Up);
 
-        var currentPoint = movementPoint.TryGetPointWithTarget();
-        var isAttackerinAttackPoint = movementPoint.ComparePoints(attackActionPoint, currentPoint);
+        var isAttackerinAttackPoint = IsInAttackRange();
 
-        if(!isAttackerinAttackPoint) {Debug.Log("Attack Doesnt hit");return;}
+        if(!isAttackerinAttackPoint) {combatReceiver.AttackFinished(); return;}
 
-        var attackPoint = targetMovementPoint.GetPoint(Direction.Up);
-        
-        var targetAttackPoint = targetMovementPoint.TryGetPointWithTarget();
-        var isTargetinAttackPoint = targetMovementPoint.ComparePoints(attackPoint, targetAttackPoint);
+        var isTargetinAttackPoint = IsTargetInAttackRange();
 
         if (isTargetinAttackPoint)
         {
@@ -48,5 +43,23 @@ public class Attack : MonoBehaviour
                 combatReceiver.ActorParried();
             }
         }
+
+        combatReceiver.AttackFinished();
+    }
+
+    public bool IsInAttackRange()
+    {
+        var attackActionPoint = movementPoint.GetPoint(Direction.Up);
+
+        var currentPoint = movementPoint.TryGetPointWithTarget();
+        return movementPoint.ComparePoints(attackActionPoint, currentPoint);
+    }
+
+    public bool IsTargetInAttackRange()
+    {
+        var attackPoint = targetMovementPoint.GetPoint(Direction.Up);
+        
+        var targetAttackPoint = targetMovementPoint.TryGetPointWithTarget();
+        return targetMovementPoint.ComparePoints(attackPoint, targetAttackPoint);
     }
 }

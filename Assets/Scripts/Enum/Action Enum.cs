@@ -15,6 +15,7 @@ public enum ActionEvent
     DodgePressed,
     CombatSequenceComplete,
     OnHitReceived,
+    OnCritHitReceived,
     OnStunned,
     HitStunRecovered,
     ChangeSubState

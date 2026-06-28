@@ -10,8 +10,13 @@ public class AttackRecoveryState : StateMachine
     
     protected override void OnEnter()
     {
-        actor.animator.DisableAction();
+        actor.actorCombatData.ActorHasFinishedAttacking();
 
         SendTrigger(ActionEvent.CombatSequenceComplete);
+    }
+
+    protected override void OnExit()
+    {
+        actor.actorCombatData.ResetFlags();
     }
 }

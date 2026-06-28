@@ -16,5 +16,10 @@ public class Parry : MonoBehaviour
         combatReceiver.ParryPerformed(direction);
     }
 
+    public void ParryExecuted()
+    {
+        combatReceiver.ParryFinished();
+    }
+
     public float GetParryDuration() => parryDuration;
 }

@@ -4,34 +4,6 @@ public class PlayerStateController : StateController
 {
     ActorContext player;
     PlayerState playerState;
-    AliveState aliveState;
-    DeadState deadState;
-
-    StaticState staticState;
-        StanceState stanceState;
-
-    LocomotionState locomotionState;
-        DodgeWindUpState dodgeWindUpState;
-        ActiveDodgeState activeDodgeState;
-        DodgeRecoveryState dodgeRecoveryState;
-    
-    OffensiveCombatState offensiveCombatState;
-        AttackWindUpState attackWindUpState;
-        ActiveAttackState activeAttackState;
-        AttackRecoveryState attackRecoveryState;
-
-    DefensiveCombatState defensiveCombatState;
-        ParryWindUpState parryWindUpState;
-        ActiveParryState activeParryState;
-        ParryRecoveryState parryRecoveryState;
-
-    
-    HitStunState hitStunState;
-        StaggerState staggerState;
-        KnockbackState knockbackState;
-        StunnedState stunnedState;
-        WakeUpState wakeUpState;
-
 
     protected override void Start()
     {   
@@ -58,6 +30,7 @@ public class PlayerStateController : StateController
         move.OnMoveAction += HandleState;
         action.OnActionInput += HandleState;
         combatReceiver.OnHitInput += HandleState;
+        health.OnHealthZero += HandleState;
     }
 
     protected void OnDisable()
@@ -65,6 +38,7 @@ public class PlayerStateController : StateController
         move.OnMoveAction -= HandleState;
         action.OnActionInput -= HandleState;
         combatReceiver.OnHitInput -= HandleState;
+        health.OnHealthZero -= HandleState;
     }
 
     protected override void HandleState(ActionEvent action, Direction direction)
@@ -72,20 +46,23 @@ public class PlayerStateController : StateController
         switch (action)
         {
             case ActionEvent.DodgePressed:
-                aliveState.SetDirection(direction);
-                aliveState.SendTrigger(ActionEvent.DodgePressed);
+                if(!actor.actorCombatData.canDodge) return;
+                playerState.SetDirection(direction);
+                playerState.SendTrigger(ActionEvent.DodgePressed);
                 break;
             case ActionEvent.AttackPressed:
-                aliveState.SetDirection(direction);
-                aliveState.SendTrigger(ActionEvent.AttackPressed);
+                if(!actor.actorCombatData.canAttack) return;
+                playerState.SetDirection(direction);
+                playerState.SendTrigger(ActionEvent.AttackPressed);
                 break;
             case ActionEvent.ParryPressed:
-                aliveState.SetDirection(direction);
-                aliveState.SendTrigger(ActionEvent.ParryPressed);
+                if(!actor.actorCombatData.canParry) return;
+                playerState.SetDirection(direction);
+                playerState.SendTrigger(ActionEvent.ParryPressed);
                 break;
             case ActionEvent.OnHitReceived:
-                aliveState.SetDirection(direction);
-                aliveState.SendTrigger(ActionEvent.OnHitReceived);
+                playerState.SetDirection(direction);
+                playerState.SendTrigger(ActionEvent.OnHitReceived);
                 break;
             
         }
@@ -96,17 +73,17 @@ public class PlayerStateController : StateController
         switch (action)
         {
             case ActionEvent.OnHealthZero:
-                aliveState.SendTrigger(ActionEvent.OnHealthZero);
+                playerState.SendTrigger(ActionEvent.OnHealthZero);
                 break;
             case ActionEvent.HitStunRecovered:
-                aliveState.SendTrigger(ActionEvent.HitStunRecovered);
+                playerState.SendTrigger(ActionEvent.HitStunRecovered);
                 break;
             case ActionEvent.OnRespawn:
-                aliveState.SendTrigger(ActionEvent.OnRespawn);
+                playerState.SendTrigger(ActionEvent.OnRespawn);
                 break;
             
             case ActionEvent.CombatSequenceComplete:
-                aliveState.SendTrigger(ActionEvent.CombatSequenceComplete);
+                playerState.SendTrigger(ActionEvent.CombatSequenceComplete);
                 break;
         }
     }
@@ -116,7 +93,7 @@ public class PlayerStateController : StateController
         //Main State
         playerState = new PlayerState();
         aliveState = new AliveState();
-        deadState = new DeadState();
+        deadState = new DeadState(player);
 
         //Static State
         staticState = new StaticState();
@@ -137,19 +114,23 @@ public class PlayerStateController : StateController
         //Load State
         playerState.LoadSubState(aliveState);
         playerState.LoadSubState(deadState);
+        playerState.LoadSubState(hitStunState);
 
         aliveState.LoadSubState(staticState);
         aliveState.LoadSubState(locomotionState);
         aliveState.LoadSubState(offensiveCombatState);
         aliveState.LoadSubState(defensiveCombatState);
-        aliveState.LoadSubState(hitStunState);
 
         staticState.LoadSubState(stanceState);
 
-        //Transition
+        //Global Transition
+        playerState.AddTransition(aliveState, hitStunState, ActionEvent.OnHitReceived);
+        playerState.AddTransition(hitStunState, aliveState, ActionEvent.HitStunRecovered);
+
         playerState.AddTransition(aliveState, deadState, ActionEvent.OnHealthZero);
         playerState.AddTransition(deadState, aliveState, ActionEvent.OnRespawn);
 
+        //Local Action Transition
         aliveState.AddTransition(staticState, offensiveCombatState, ActionEvent.AttackPressed);
         aliveState.AddTransition(staticState, defensiveCombatState, ActionEvent.ParryPressed);
         aliveState.AddTransition(staticState, locomotionState, ActionEvent.DodgePressed);
@@ -163,12 +144,6 @@ public class PlayerStateController : StateController
         aliveState.AddTransition(offensiveCombatState, staticState, ActionEvent.CombatSequenceComplete);
         aliveState.AddTransition(defensiveCombatState, staticState, ActionEvent.CombatSequenceComplete);
         aliveState.AddTransition(locomotionState, staticState, ActionEvent.CombatSequenceComplete);
-
-        aliveState.AddTransition(staticState, hitStunState, ActionEvent.OnHitReceived);
-        aliveState.AddTransition(locomotionState, hitStunState, ActionEvent.OnHitReceived);
-        aliveState.AddTransition(defensiveCombatState, hitStunState, ActionEvent.OnHitReceived);
-
-        aliveState.AddTransition(hitStunState, staticState, ActionEvent.HitStunRecovered);
 
         playerState.EnterStateMachine();
     }

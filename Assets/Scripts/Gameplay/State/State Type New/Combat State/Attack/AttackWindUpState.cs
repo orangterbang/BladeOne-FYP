@@ -13,6 +13,7 @@ public class AttackWindUpState : StateMachine
         actor.animator.SetActionAnimation(ActionInput.Attack, direction);
         
         actor.animator.PlayAnim();
+        actor.actorCombatData.ActorIsAttacking();
 
         SendTrigger(ActionEvent.ChangeSubState);
     }

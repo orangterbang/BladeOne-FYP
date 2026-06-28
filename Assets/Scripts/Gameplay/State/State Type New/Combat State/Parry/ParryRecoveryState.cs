@@ -11,7 +11,14 @@ public class ParryRecoveryState : StateMachine
     
     protected override void OnEnter()
     {
-
+        actor.actorCombatData.ActorHasFinishedParrying();
+        actor.parry.ParryExecuted();
+        
         SendTrigger(ActionEvent.CombatSequenceComplete);
+    }
+
+    protected override void OnExit()
+    {
+        actor.actorCombatData.ResetFlags();
     }
 }

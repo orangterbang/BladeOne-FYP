@@ -4,6 +4,8 @@ using System.Collections;
 public class ActiveParryState : StateMachine
 {
     ActorContext actor;
+
+    private Coroutine activeCoroutine;
     
     public ActiveParryState(ActorContext actorContext)
     {
@@ -12,15 +14,30 @@ public class ActiveParryState : StateMachine
     
     protected override void OnEnter()
     {
-        actor.coroutineRun.Run(AttackSequenceCoroutine());
+        activeCoroutine = actor.coroutineRun.Run(ParrySequenceCoroutine());
     }
 
-    private IEnumerator AttackSequenceCoroutine()
+    protected override void OnExit()
     {
+        if(activeCoroutine != null)
+        {
+            actor.coroutineRun.StopCoroutine(activeCoroutine);
+            activeCoroutine = null;
+        }
+    }
+
+    private IEnumerator ParrySequenceCoroutine()
+    {
+        yield return new WaitUntil(() => actor.animator.AnimationClipFinished(actor.animator.triggeredAnimationName));
+        
         actor.animator.EnableAction();
-        yield return null;
 
         actor.parry.ExecuteParry(direction);
+
+        yield return new WaitUntil(() => {
+            var currentClipRunning = actor.animator.GetFullAnimationStateName("Recovery");
+
+            return currentClipRunning != null;});
 
         SendTrigger(ActionEvent.ChangeSubState);
     }

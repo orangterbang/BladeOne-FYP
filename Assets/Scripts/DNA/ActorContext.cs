@@ -8,6 +8,8 @@ public class ActorContext : MonoBehaviour
     public AnimatorController animator { get; private set; }
     public CoroutineRunner coroutineRun { get; private set; }
     public ActorCombatData actorCombatData { get; private set; }
+    public Health health { get; private set; }
+    public SoundEffectsManager soundEffects { get; private set; }
     
     protected virtual void Awake()
     {
@@ -17,5 +19,7 @@ public class ActorContext : MonoBehaviour
         parry = GetComponent<Parry>();
         coroutineRun = GetComponent<CoroutineRunner>();
         actorCombatData = GetComponent<ActorCombatData>();
+        health = GetComponent<Health>();
+        soundEffects = GetComponent<SoundEffectsManager>();
     }
 }

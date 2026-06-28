@@ -19,5 +19,10 @@ public class CollideWithObject : MonoBehaviour
         }
     }
 
-    public bool isTargetInCurrentPoint() => targetInCurrPoint;
+    public Point isTargetInCurrentPoint() { 
+            if(!targetInCurrPoint)return null;
+
+            Point p = this.GetComponent<Point>();
+            return p;
+        }
 }

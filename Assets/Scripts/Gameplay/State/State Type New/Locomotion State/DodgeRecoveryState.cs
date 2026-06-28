@@ -11,8 +11,14 @@ public class DodgeRecoveryState : StateMachine
 
     protected override void OnEnter()
     {
+        actor.actorCombatData.ActorHasFinishedDodging();
         actor.animator.DisableAction();
 
         SendTrigger(ActionEvent.CombatSequenceComplete);
+    }
+
+    protected override void OnExit()
+    {
+        actor.actorCombatData.ResetFlags();
     }
 }

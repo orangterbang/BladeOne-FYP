@@ -4,6 +4,8 @@ using System.Collections;
 public class ActiveDodgeState : StateMachine
 {
     ActorContext actor;
+
+    private Coroutine activeCoroutine;
     
     public ActiveDodgeState(ActorContext actorContext)
     {
@@ -12,7 +14,16 @@ public class ActiveDodgeState : StateMachine
 
     protected override void OnEnter()
     {
-        actor.coroutineRun.Run(MoveCoroutine());
+        activeCoroutine = actor.coroutineRun.Run(MoveCoroutine());
+    }
+
+    protected override void OnExit()
+    {
+        if(activeCoroutine != null)
+        {
+            actor.coroutineRun.StopCoroutine(activeCoroutine);
+            activeCoroutine = null;
+        }
     }
 
     private IEnumerator MoveCoroutine()

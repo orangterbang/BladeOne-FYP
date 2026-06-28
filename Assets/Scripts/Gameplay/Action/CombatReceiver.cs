@@ -19,25 +19,33 @@ public class CombatReceiver : MonoBehaviour
     public bool ReceiveHit(float damage, Direction direction)
     {
         if(currCombatData == null) return false;
+        if(currCombatData.isDamaged && !currCombatData.isStunned) return false;
 
         if (currCombatData.isDodging)
         {
             //make sure to check parry direction to & compare with attack direction
-            Debug.Log("Dodged");
             defensiveActionPerformed = ActionEvent.DodgePressed;
             return false;
         }
 
         if (IsParryable(direction, parryActionDirection))
         {
-            Debug.Log("Parried");//Send Event
             defensiveActionPerformed = ActionEvent.ParryPressed;
-            currCombatData.isParrying = false;
+            currCombatData.ActorHasFinishedParrying();
             return false;
         }
 
+        if (!currCombatData.isDamaged && currCombatData.isStunned)
+        {
+            currCombatData.ActorIsDamaged();
+            health.TakeDamage(damage + (damage * 4f), direction);
+            OnHitInput?.Invoke(ActionEvent.OnHitReceived, direction);
+            return true;
+        }
+
         //take damage
-        health.TakeDamage(damage);
+        currCombatData.ActorIsDamaged();
+        health.TakeDamage(damage, direction);
         OnHitInput?.Invoke(ActionEvent.OnHitReceived, direction);
 
         return true;
@@ -47,8 +55,18 @@ public class CombatReceiver : MonoBehaviour
 
     public void ParryPerformed(Direction direction)
     {
-        currCombatData.isParrying = true;
+        currCombatData.ActorIsParrying();
         parryActionDirection = direction;
+    }
+
+    public void ParryFinished()
+    {
+        currCombatData.ActorHasFinishedParrying();
+    }
+
+    public void AttackFinished()
+    {
+        currCombatData.ActorHasFinishedAttacking();
     }
 
     private bool IsParryable(Direction attackDirection, Direction parryDirection)
@@ -77,7 +95,7 @@ public class CombatReceiver : MonoBehaviour
 
     public void ActorParried()
     {
+        currCombatData.ActorIsStunned();
         OnHitInput?.Invoke(ActionEvent.OnStunned, currCombatData.currDirection);
-        currCombatData.isStunned = true;
     }
 }

@@ -15,6 +15,7 @@ public class DodgeWindUpState : StateMachine
         actor.animator.SetActionAnimation(ActionInput.Move);
         actor.animator.EnableAction();
         actor.animator.PlayAnim();
+        actor.actorCombatData.ActorIsDodging();
 
         
         SendTrigger(ActionEvent.ChangeSubState);

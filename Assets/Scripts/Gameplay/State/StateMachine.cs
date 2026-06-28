@@ -101,19 +101,6 @@ public abstract class StateMachine
         currentSubState?.SetDirection(direction);
     }
 
-    /*private void ChangeSubState(StateMachine state) <---Unused method
-    {
-        currentSubState?.ExitStateMachine();
-        //var newState = subStates[GetType()];
-        if (!subStates.TryGetValue(state.GetType(), out var newState))
-        {
-            Debug.LogError($"State {state.GetType()} not registered in HFSM");
-            return;
-        }
-        currentSubState = newState;
-        newState.EnterStateMachine();
-    }*/
-
     private void ChangeSubState(StateMachine newState)
     {
         // Ensure this parent actually owns this substate type
@@ -127,5 +114,5 @@ public abstract class StateMachine
         currentSubState = subStates[newState.GetType()]; // Use the parent's registered instance
         currentSubState.SetDirection(this.direction);
         currentSubState.EnterStateMachine();
-        }
+    }
 }

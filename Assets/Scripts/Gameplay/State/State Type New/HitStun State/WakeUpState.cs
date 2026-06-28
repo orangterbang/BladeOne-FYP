@@ -11,9 +11,13 @@ public class WakeUpState : StateMachine
 
     protected override void OnEnter()
     {
-        //actor.animator.SetActionAnimation(ActionEvent.OnStunhitRecovered);
-        //actor.animator.PlayAnim();
+        actor.actorCombatData.ActorHasRecovered();
 
-        SendTrigger(ActionEvent.CombatSequenceComplete);
+        if(!actor.actorCombatData.isStunned)
+        {
+            actor.animator.EnableReaction();
+        }
+
+        SendTrigger(ActionEvent.HitStunRecovered);
     }
 }
